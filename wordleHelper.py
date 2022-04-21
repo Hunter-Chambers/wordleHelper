@@ -1,45 +1,7 @@
 #!/usr/bin/env python
 
 
-VALID_WORDS = ["ABUSE", "ADULT", "AGENT", "ANGER", "APPLE", "AWARD",
-               "BASIS", "BEACH", "BIRTH", "BLOCK", "BLOOD", "BOARD",
-               "BRAIN", "BREAD", "BREAK", "BROWN", "BUYER", "CAUSE",
-               "CHAIN", "CHAIR", "CHEST", "CHIEF", "CHILD", "CHINA",
-               "CLAIM", "CLASS", "CLOCK", "COACH", "COAST", "COURT",
-               "COVER", "CREAM", "CRIME", "CROSS", "CROWD", "CROWN",
-               "CYCLE", "DANCE", "DEATH", "DEPTH", "DOUBT", "DRAFT",
-               "DRAMA", "DREAM", "DRESS", "DRINK", "DRIVE", "EARTH",
-               "ENEMY", "ENTRY", "ERROR", "EVENT", "FAITH", "FAULT",
-               "FIELD", "FIGHT", "FINAL", "FLOOR", "FOCUS", "FORCE",
-               "FRAME", "FRANK", "FRONT", "FRUIT", "GLASS", "GRANT",
-               "GRASS", "GREEN", "GROUP", "GUIDE", "HEART", "HENRY",
-               "HORSE", "HOTEL", "HOUSE", "IMAGE", "INDEX", "INPUT",
-               "ISSUE", "JAPAN", "JONES", "JUDGE", "KNIFE", "LAURA",
-               "LAYER", "LEVEL", "LEWIS", "LIGHT", "LIMIT", "LUNCH",
-               "MAJOR", "MARCH", "MATCH", "METAL", "MODEL", "MONEY",
-               "MONTH", "MOTOR", "MOUTH", "MUSIC", "NIGHT", "NOISE",
-               "NORTH", "NOVEL", "NURSE", "OFFER", "ORDER", "OTHER",
-               "OWNER", "PANEL", "PAPER", "PARTY", "PEACE", "PETER",
-               "PHASE", "PHONE", "PIECE", "PILOT", "PITCH", "PLACE",
-               "PLANE", "PLANT", "PLATE", "POINT", "POUND", "POWER",
-               "PRESS", "PRICE", "PRIDE", "PRIZE", "PROOF", "QUEEN",
-               "RADIO", "RANGE", "RATIO", "REPLY", "RIGHT", "RIVER",
-               "ROUND", "ROUTE", "RUGBY", "SCALE", "SCENE", "SCOPE",
-               "SCORE", "SENSE", "SHAPE", "SHARE", "SHEEP", "SHEET",
-               "SHIFT", "SHIRT", "SHOCK", "SIGHT", "SIMON", "SKILL",
-               "SLEEP", "SMILE", "SMITH", "SMOKE", "SOUND", "SOUTH",
-               "SPACE", "SPEED", "SPITE", "SPORT", "SQUAD", "STAFF",
-               "STAGE", "START", "STATE", "STEAM", "STEEL", "STOCK",
-               "STONE", "STORE", "STUDY", "STUFF", "STYLE", "SUGAR",
-               "TABLE", "TASTE", "TERRY", "THEME", "THING", "TITLE",
-               "TOTAL", "TOUCH", "TOWER", "TRACK", "TRADE", "TRAIN",
-               "TREND", "TRIAL", "TRUST", "TRUTH", "UNCLE", "UNION",
-               "UNITY", "VALUE", "VIDEO", "VISIT", "VOICE", "WASTE",
-               "WATCH", "WATER", "WHILE", "WHITE", "WHOLE", "WOMAN",
-               "WORLD", "YOUTH"]
-
-
-def check_guess(guess: list, current_filter: list = None) -> (list, dict):
+def check_guess(valid_words: list, guess: list) -> dict:
     '''
     Finds which words are still possible based
     on the guess. Also finds which letters are
@@ -50,17 +12,12 @@ def check_guess(guess: list, current_filter: list = None) -> (list, dict):
                   was made. Format should be as follows:
                   [{"letter": '<character>', "color": "<Color>"},...]
 
-    Returns: A list that holds all of the words that are still valid
-             and a dictionary that shows which letters are the most
-             common in each position in the words that are still valid
-    '''
+    Postcondition: 'valid_words' has been filtered and now only
+                   contains the words that are still valid.
 
-    # check if a list of pre-filtered words was passed in
-    if (current_filter):
-        words = current_filter
-    else:
-        words = VALID_WORDS
-    # end if
+    Returns: A dictionary that shows which letters are the most common
+             in each position in the words that are still valid
+    '''
 
     position = 0
 
@@ -68,13 +25,13 @@ def check_guess(guess: list, current_filter: list = None) -> (list, dict):
     for letter in guess:
         # filter out words that have the 'Gray' letter
         if (letter["color"] == "Gray"):
-            words = list(filter(lambda word: not letter["letter"] in word, words))
+            valid_words = list(filter(lambda word: not letter["letter"] in word, valid_words))
         # filter out words that do not have the 'Green' letter in the correct position
         elif (letter["color"] == "Green"):
-            words = list(filter(lambda word: letter["letter"] == word[position], words))
+            valid_words = list(filter(lambda word: letter["letter"] == word[position], valid_words))
         # filter out words that do not have the 'Yellow' letter
         else:
-            words = list(filter(lambda word: letter["letter"] in word, words))
+            valid_words = list(filter(lambda word: letter["letter"] in word, valid_words))
         # end if
 
         position += 1
@@ -83,8 +40,8 @@ def check_guess(guess: list, current_filter: list = None) -> (list, dict):
     counts = {0: {}, 1: {}, 2: {}, 3: {}, 4: {}}
 
     # this loop will count how many times each letter appears
-    # in each position in the currently valid words
-    for word in words:
+    # in each position in the current list of valid words
+    for word in valid_words:
         position = 0
 
         for letter in word:
@@ -98,9 +55,7 @@ def check_guess(guess: list, current_filter: list = None) -> (list, dict):
         # end for
     # end for
 
-    most_popular = find_max(counts)
-
-    return (words, most_popular)
+    return find_max(counts)
 # end check_guess
 
 def find_max(counts: dict) -> dict:
@@ -159,6 +114,43 @@ def display_help(most_popular: dict) -> None:
 # end display_help
 
 if (__name__ == "__main__"):
+    VALID_WORDS = ["ABUSE", "ADULT", "AGENT", "ANGER", "APPLE", "AWARD",
+                   "BASIS", "BEACH", "BIRTH", "BLOCK", "BLOOD", "BOARD",
+                   "BRAIN", "BREAD", "BREAK", "BROWN", "BUYER", "CAUSE",
+                   "CHAIN", "CHAIR", "CHEST", "CHIEF", "CHILD", "CHINA",
+                   "CLAIM", "CLASS", "CLOCK", "COACH", "COAST", "COURT",
+                   "COVER", "CREAM", "CRIME", "CROSS", "CROWD", "CROWN",
+                   "CYCLE", "DANCE", "DEATH", "DEPTH", "DOUBT", "DRAFT",
+                   "DRAMA", "DREAM", "DRESS", "DRINK", "DRIVE", "EARTH",
+                   "ENEMY", "ENTRY", "ERROR", "EVENT", "FAITH", "FAULT",
+                   "FIELD", "FIGHT", "FINAL", "FLOOR", "FOCUS", "FORCE",
+                   "FRAME", "FRANK", "FRONT", "FRUIT", "GLASS", "GRANT",
+                   "GRASS", "GREEN", "GROUP", "GUIDE", "HEART", "HENRY",
+                   "HORSE", "HOTEL", "HOUSE", "IMAGE", "INDEX", "INPUT",
+                   "ISSUE", "JAPAN", "JONES", "JUDGE", "KNIFE", "LAURA",
+                   "LAYER", "LEVEL", "LEWIS", "LIGHT", "LIMIT", "LUNCH",
+                   "MAJOR", "MARCH", "MATCH", "METAL", "MODEL", "MONEY",
+                   "MONTH", "MOTOR", "MOUTH", "MUSIC", "NIGHT", "NOISE",
+                   "NORTH", "NOVEL", "NURSE", "OFFER", "ORDER", "OTHER",
+                   "OWNER", "PANEL", "PAPER", "PARTY", "PEACE", "PETER",
+                   "PHASE", "PHONE", "PIECE", "PILOT", "PITCH", "PLACE",
+                   "PLANE", "PLANT", "PLATE", "POINT", "POUND", "POWER",
+                   "PRESS", "PRICE", "PRIDE", "PRIZE", "PROOF", "QUEEN",
+                   "RADIO", "RANGE", "RATIO", "REPLY", "RIGHT", "RIVER",
+                   "ROUND", "ROUTE", "RUGBY", "SCALE", "SCENE", "SCOPE",
+                   "SCORE", "SENSE", "SHAPE", "SHARE", "SHEEP", "SHEET",
+                   "SHIFT", "SHIRT", "SHOCK", "SIGHT", "SIMON", "SKILL",
+                   "SLEEP", "SMILE", "SMITH", "SMOKE", "SOUND", "SOUTH",
+                   "SPACE", "SPEED", "SPITE", "SPORT", "SQUAD", "STAFF",
+                   "STAGE", "START", "STATE", "STEAM", "STEEL", "STOCK",
+                   "STONE", "STORE", "STUDY", "STUFF", "STYLE", "SUGAR",
+                   "TABLE", "TASTE", "TERRY", "THEME", "THING", "TITLE",
+                   "TOTAL", "TOUCH", "TOWER", "TRACK", "TRADE", "TRAIN",
+                   "TREND", "TRIAL", "TRUST", "TRUTH", "UNCLE", "UNION",
+                   "UNITY", "VALUE", "VIDEO", "VISIT", "VOICE", "WASTE",
+                   "WATCH", "WATER", "WHILE", "WHITE", "WHOLE", "WOMAN",
+                   "WORLD", "YOUTH"]
+
     print("This is a simulation of a simplified",
           "version of the popular game 'Wordle'.")
     print("In this simulation, only a small set of",
@@ -168,34 +160,35 @@ if (__name__ == "__main__"):
 
     print('-'*30)
     print("Guess 1 - BREAD")
-    filtered_words, most_popular = check_guess([{"letter": 'B', "color": "Gray"},
-                                                {"letter": 'R', "color": "Yellow"},
-                                                {"letter": 'E', "color": "Yellow"},
-                                                {"letter": 'A', "color": "Gray"},
-                                                {"letter": 'D', "color": "Gray"}])
+    most_popular = check_guess(VALID_WORDS,
+                               [{"letter": 'B', "color": "Gray"},
+                                {"letter": 'R', "color": "Yellow"},
+                                {"letter": 'E', "color": "Yellow"},
+                                {"letter": 'A', "color": "Gray"},
+                                {"letter": 'D', "color": "Gray"}])
     display_help(most_popular)
 
     input("Press 'Enter' to continue...")
 
     print('-'*30)
     print("Guess 2 - PORER")
-    filtered_words, most_popular = check_guess([{"letter": 'P', "color": "Gray"},
-                                                {"letter": 'O', "color": "Green"},
-                                                {"letter": 'R', "color": "Yellow"},
-                                                {"letter": 'E', "color": "Yellow"},
-                                                {"letter": 'R', "color": "Yellow"}],
-                                                filtered_words)
+    most_popular = check_guess(VALID_WORDS,
+                               [{"letter": 'P', "color": "Gray"},
+                                {"letter": 'O', "color": "Green"},
+                                {"letter": 'R', "color": "Yellow"},
+                                {"letter": 'E', "color": "Yellow"},
+                                {"letter": 'R', "color": "Yellow"}])
     display_help(most_popular)
 
     input("Press 'Enter' to continue...")
 
     print('-'*30)
     print("Guess 3 - CORSE")
-    filtered_words, most_popular = check_guess([{"letter": 'C', "color": "Gray"},
-                                                {"letter": 'O', "color": "Green"},
-                                                {"letter": 'R', "color": "Yellow"},
-                                                {"letter": 'S', "color": "Gray"},
-                                                {"letter": 'E', "color": "Green"}],
-                                                filtered_words)
+    most_popular = check_guess(VALID_WORDS,
+                               [{"letter": 'C', "color": "Gray"},
+                                {"letter": 'O', "color": "Green"},
+                                {"letter": 'R', "color": "Yellow"},
+                                {"letter": 'S', "color": "Gray"},
+                                {"letter": 'E', "color": "Green"}])
     display_help(most_popular)
 # end if
