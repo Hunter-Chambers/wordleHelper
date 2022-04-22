@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-def check_guess(valid_words: list, guess: list) -> dict:
+def check_guess(valid_words: list, guess: list) -> (list, dict):
     '''
     Finds which words are still possible based
     on the guess. Also finds which letters are
@@ -10,7 +10,7 @@ def check_guess(valid_words: list, guess: list) -> dict:
 
     Precondition: 'guess' must represent the guess that
                   was made. Format should be as follows:
-                  [{"letter": '<character>', "color": "<Color>"},...]
+                  [{"letter": '<character>', "color": "<COLOR>"},...]
 
     Postcondition: 'valid_words' has been filtered and now only
                    contains the words that are still valid.
@@ -24,10 +24,10 @@ def check_guess(valid_words: list, guess: list) -> dict:
     # filter out words based on character color
     for letter in guess:
         # filter out words that have the 'Gray' letter
-        if (letter["color"] == "Gray"):
+        if (letter["color"] == "GRAY"):
             valid_words = list(filter(lambda word: not letter["letter"] in word, valid_words))
         # filter out words that do not have the 'Green' letter in the correct position
-        elif (letter["color"] == "Green"):
+        elif (letter["color"] == "GREEN"):
             valid_words = list(filter(lambda word: letter["letter"] == word[position], valid_words))
         # filter out words that do not have the 'Yellow' letter
         else:
@@ -55,7 +55,7 @@ def check_guess(valid_words: list, guess: list) -> dict:
         # end for
     # end for
 
-    return find_max(counts)
+    return valid_words, find_max(counts)
 # end check_guess
 
 def find_max(counts: dict) -> dict:
@@ -160,23 +160,23 @@ if (__name__ == "__main__"):
 
     print('-'*30)
     print("Guess 1 - BREAD")
-    most_popular = check_guess(VALID_WORDS,
-                               [{"letter": 'B', "color": "Gray"},
-                                {"letter": 'R', "color": "Yellow"},
-                                {"letter": 'E', "color": "Yellow"},
-                                {"letter": 'A', "color": "Gray"},
-                                {"letter": 'D', "color": "Gray"}])
+    VALID_WORDS, most_popular = check_guess(VALID_WORDS,
+                                            [{"letter": 'B', "color": "GRAY"},
+                                            {"letter": 'R', "color": "YELLOW"},
+                                            {"letter": 'E', "color": "YELLOW"},
+                                            {"letter": 'A', "color": "GRAY"},
+                                            {"letter": 'D', "color": "GRAY"}])
     display_help(most_popular)
 
     input("Press 'Enter' to continue...")
 
     print('-'*30)
     print("Guess 2 - PORER")
-    most_popular = check_guess(VALID_WORDS,
-                               [{"letter": 'P', "color": "Gray"},
-                                {"letter": 'O', "color": "Green"},
-                                {"letter": 'R', "color": "Yellow"},
-                                {"letter": 'E', "color": "Yellow"},
-                                {"letter": 'R', "color": "Yellow"}])
+    VALID_WORDS, most_popular = check_guess(VALID_WORDS,
+                                            [{"letter": 'P', "color": "GRAY"},
+                                            {"letter": 'O', "color": "GREEN"},
+                                            {"letter": 'R', "color": "YELLOW"},
+                                            {"letter": 'E', "color": "YELLOW"},
+                                            {"letter": 'R', "color": "YELLOW"}])
     display_help(most_popular)
 # end if
