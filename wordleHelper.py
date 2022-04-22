@@ -31,7 +31,7 @@ def check_guess(valid_words: list, guess: list) -> dict:
             valid_words = list(filter(lambda word: letter["letter"] == word[position], valid_words))
         # filter out words that do not have the 'Yellow' letter
         else:
-            valid_words = list(filter(lambda word: letter["letter"] in word, valid_words))
+            valid_words = list(filter(lambda word: letter["letter"] in word and letter["letter"] != word[position], valid_words))
         # end if
 
         position += 1
@@ -178,17 +178,5 @@ if (__name__ == "__main__"):
                                 {"letter": 'R', "color": "Yellow"},
                                 {"letter": 'E', "color": "Yellow"},
                                 {"letter": 'R', "color": "Yellow"}])
-    display_help(most_popular)
-
-    input("Press 'Enter' to continue...")
-
-    print('-'*30)
-    print("Guess 3 - CORSE")
-    most_popular = check_guess(VALID_WORDS,
-                               [{"letter": 'C', "color": "Gray"},
-                                {"letter": 'O', "color": "Green"},
-                                {"letter": 'R', "color": "Yellow"},
-                                {"letter": 'S', "color": "Gray"},
-                                {"letter": 'E', "color": "Green"}])
     display_help(most_popular)
 # end if
