@@ -23,13 +23,20 @@ def check_guess(valid_words: list, guess: list) -> (list, dict):
 
     # filter out words based on character color
     for letter in guess:
-        # filter out words that have the 'Gray' letter
         if (letter["color"] == "GRAY"):
-            valid_words = list(filter(lambda word: not letter["letter"] in word, valid_words))
+            color_count = check_dup_letters(letter["letter"], guess)
+
+            # filter out words that have the 'Gray' letter
+            if (color_count == 0):
+                valid_words = list(filter(lambda word: not letter["letter"] in word, valid_words))
+            # filter out words that do not have the correct number of occurances of the letter
+            else:
+                valid_words = list(filter(lambda word: word.count(letter["letter"]) == color_count, valid_words))
+            # end if
         # filter out words that do not have the 'Green' letter in the correct position
         elif (letter["color"] == "GREEN"):
             valid_words = list(filter(lambda word: letter["letter"] == word[position], valid_words))
-        # filter out words that do not have the 'Yellow' letter
+        # filter out words that have the 'Yellow' letter in the same position
         else:
             valid_words = list(filter(lambda word: letter["letter"] in word and letter["letter"] != word[position], valid_words))
         # end if
@@ -100,6 +107,28 @@ def find_max(counts: dict) -> dict:
 
     return most_popular
 #end find_max
+
+def check_dup_letters(character: chr, guess: list) -> int:
+    '''
+    Finds how many occurances of 'character' are valid.
+
+    Precondition: 'guess' must represent the guess that
+                  was made. Format should be as follows:
+                  [{"letter": '<character>', "color": "<COLOR>"},...]
+
+    Returns: how many occurances of 'character' are valid.
+    '''
+
+    color_count = 0
+
+    for letter in guess:
+        if (letter["letter"] == character and letter["color"] != "GRAY"):
+                color_count += 1
+        # end if
+    # end for
+
+    return color_count
+# end check_dup_letters
 
 def display_help(most_popular: dict) -> None:
     '''
