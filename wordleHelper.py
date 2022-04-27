@@ -89,7 +89,7 @@ def find_max(counts: dict) -> dict:
             if (counts[position][letter] > highest):
                 highest = counts[position][letter]
                 answer = [letter]
-            else:
+            elif (counts[position][letter] == highest):
                 answer += letter
             # end if
         # end for
